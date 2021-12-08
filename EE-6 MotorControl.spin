@@ -40,11 +40,11 @@ OBJ ' Objects
   'Term    : "FullDuplexSerial.spin"  'Universal Asynchronous Receiver Transmitter (UART) communication
 
 PUB Main
+  StopCog                             'Stops cog activation and frees it
   Init                                'Init motors
   StopAllMotors                       'Set servo motors to zero-ed position
   Pause(5000)                         'Set-up time
   Cog := cognew(Assignment, @stack)   'COGNEW(ParameterList, StackPointer);Starts the next available cog
-  StopCog                             'Stops cog activation and frees it
 
 PUB Assignment                        'Pulse Width Modulation (PWM) technique
                                       'Forward Movement
