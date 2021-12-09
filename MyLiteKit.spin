@@ -2,9 +2,9 @@
 {                              'F12 for Parallex Serial Terminal
  Project: MyLiteKit.spin
  Platform: Parallax Project USB Board
- Revision: 1.4
+ Revision: 1.5
  Author: Timothy Lee
- Date: 21 November 2021
+ Date: 01 December 2021
  Log:
 Date: Desc
       14/11/2021: Implemented movement
@@ -12,11 +12,12 @@ Date: Desc
       20/11/2021: Edited from SensorControl.spin to create a main to access the sensor values
       21/11/2021: Increased # of Pause functions to create buffer time between calling of functions that require longer processing time (motor movement & sensor reading)
       21/11/2021: Created rxValue in Main and call to Comm.
+      01/12/2021: Modified movement controls in Main to detect for allowable movement.
 }
 
 CON  'Cannot be changed during run time
         _clkmode = xtal1 + pll16x          'Standard clock mode * crystal frequency = 80 MHz
-        _xinfreq = 5_000_000                'clkfreq = 1 sec, clkfreq/2
+        _xinfreq = 5_000_000               'clkfreq = 1 sec, clkfreq/2
 
         'To create a Pause
         _ConClkFreq = ((_clkmode - xtal1) >> 6) * _xinfreq
@@ -46,23 +47,31 @@ PUB Main                       'Doesn't matter what name it has, spin runs the f
     Pause(50)                                                '1 Forwards, 2 Reverses, 3 StopAllMotors
     case Signal                                              '4 Turn Left, 5 Turn Right
       1:
-         if (ToFFront < 180) AND (UltraFront > 300)          'Does not detec edge or obstacle
+         if (ToFFront < 180) AND (UltraFront > 300)          'Does not detect edge or obstacle
            Motor.Movement(1)                                 'Forwards
 
          else
             Motor.Movement(3)
       2:
-         if (ToFBack < 180) AND  (UltraBack > 300)           'Does not detec edge or obstacle
+         if (ToFBack < 180) AND  (UltraBack > 300)           'Does not detect edge or obstacle
            Motor.Movement(2)                                 'Reverses
 
          else
            Motor.Movement(3)
       3:
            Motor.Movement(3)                                 'Stops all motors
-      4:
+      4:                                                     'Does not detect edge or obstacle (caution; not required)
+         if (ToFBack < 180) OR (UltraBack > 300) OR (ToFFront < 180) OR (UltraFront > 300)  
            Motor.Movement(4)                                 'Turn Left
-      5:
-           Motor.Movement(5)                                 'Turn Right
+
+         else
+           Motor.Movement(3)
+      5:                                                     'Does not detect edge or obstacle (caution; not required)
+         if (ToFBack < 180) OR (UltraBack > 300) OR (ToFFront < 180) OR (UltraFront > 300)  
+           Motor.Movement(4)                                 'Turn Right
+
+         else
+           Motor.Movement(3)
 
 PRI Pause(ms) | t
   t := cnt - 1088
