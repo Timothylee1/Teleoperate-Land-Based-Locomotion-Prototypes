@@ -16,3 +16,5 @@ EE-8 encompass motor control, sensor control, MyLiteKit, and comm control for Li
 EE-9 comprise encapsulation of the aforementioned control object files in MyLiteKit for behavioural control.
 
 EE-10 is similar to EE-6-9, where the Lite Kit is programmed and able to perform the tasks of the previous sections. Certain components are to be integrated into the Production Kit to facilitate use of EE-10's code to run the Production Kit.
+
+Final is similar to EE-10, except that it is altered according to certain conditions regarding the Production Kit.
